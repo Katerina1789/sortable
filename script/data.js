@@ -1,5 +1,6 @@
 // import the normalization helpers
 import { normalizeHeroes } from './utils.js';
+import { updateState } from './state.js';
 
 // the API URL
 const URL = 'https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json';
@@ -20,6 +21,9 @@ export const fetchHeroes = async () => {
 
   // normalizes all heroes
   heroes = normalizeHeroes(json);
+
+  // store heroes in global state
+  updateState({ heroes });
 
   // returns the normalized list
   return heroes;
