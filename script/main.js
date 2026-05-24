@@ -1,23 +1,29 @@
 import { fetchHeroes } from './data.js';
 import { loadStateFromUrl, initUrlSync } from './router.js';
 import { renderApp } from './render.js';
-import { initDetailView } from './detailView.js';
+
+const showError = (error) => {
+  const container = document.getElementById('table-container');
+  container.textContent = error.message || 'Something went wrong loading heroes.';
+};
 
 const init = async () => {
-  // read URL parameters → update state
-  loadStateFromUrl();
+  try {
+    // 1. Load URL → state
+    loadStateFromUrl();
 
-  // start syncing state → URL
-  initUrlSync();
+    // 2. Start syncing state → URL
+    initUrlSync();
 
-  // fetch and normalize heroes
-  await fetchHeroes();
+    // 3. Fetch heroes
+    await fetchHeroes();
 
-  // render the full UI
-  renderApp();
+    // 4. Render the app (creates table once, subscribes to state)
+    renderApp();
 
-  // initialize detail view (reacts to state + URL)
-  initDetailView();
+  } catch (error) {
+    showError(error);
+  }
 };
 
 init();

@@ -2,32 +2,27 @@
 import { normalizeHeroes } from './utils.js';
 import { updateState } from './state.js';
 
-// the API URL
-const URL = 'https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json';
+const DATA_URL = 'https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json';
 
-// store heroes in memory so we never fetch twice
 let heroes = [];
 
-// fetchHeroes fetches the heroes once and normalizes them
 export const fetchHeroes = async () => {
-  // if already fetched returns them
   if (heroes.length) return heroes;
 
-  // fetches the JSON file
-  const response = await fetch(URL);
+  const response = await fetch(DATA_URL);
+  if (!response.ok) {
+    throw new Error(`Could not fetch heroes (${response.status})`);
+  }
 
-  // parses JSON
   const json = await response.json();
+  if (!Array.isArray(json)) {
+    throw new Error('Hero data is not a list');
+  }
 
-  // normalizes all heroes
   heroes = normalizeHeroes(json);
-
-  // store heroes in global state
   updateState({ heroes });
 
-  // returns the normalized list
   return heroes;
 };
 
-// simple getter for other modules
 export const getHeroes = () => heroes;

@@ -1,9 +1,6 @@
-// import state and selectors
-import { getState, updateState, subscribeState } from './state.js';
-import { getVisibleHeroes } from './selectors.js';
+import { getState, updateState } from './state.js';
 
-// TABLE_COLUMNS defines all table columns
-const TABLE_COLUMNS = [
+export const TABLE_COLUMNS = [
   { key: 'icon', label: 'Icon' },
   { key: 'name', label: 'Name' },
   { key: 'fullName', label: 'Full Name' },
@@ -21,117 +18,99 @@ const TABLE_COLUMNS = [
   { key: 'alignment', label: 'Alignment' },
 ];
 
-// createTable builds the table structure
+const displayValue = (value) => value ?? 'Unknown';
+
 export const createTable = (container) => {
-  // creates the table element
   const table = document.createElement('table');
 
-  // builds the header
   const thead = document.createElement('thead');
   const headerRow = document.createElement('tr');
 
-  // loops through columns and creates header cells
   TABLE_COLUMNS.forEach((column) => {
     const th = document.createElement('th');
     th.textContent = column.label;
+    th.scope = 'col';
     th.dataset.column = column.key;
-
-    // clicking a header sorts the table
-    th.addEventListener('click', () => {
-      const { sortColumn, sortDirection } = getState();
-      const nextDirection =
-        sortColumn === column.key && sortDirection === 'asc'
-          ? 'desc'
-          : 'asc';
-
-      updateState({ sortColumn: column.key, sortDirection: nextDirection });
-    });
-
     headerRow.appendChild(th);
   });
 
   thead.appendChild(headerRow);
   table.appendChild(thead);
-
-  // adds empty tbody
   table.appendChild(document.createElement('tbody'));
 
-  // inserts table into container
   container.innerHTML = '';
   container.appendChild(table);
 
   return table;
 };
 
-// renderTableBody fills the table with hero rows
-export const renderTableBody = (table) => {
-  // gets visible heroes (filtered + sorted + paginated)
-  const heroes = getVisibleHeroes();
-
-  // finds tbody
+export const renderTableBody = (table, heroes = getState().heroes) => {
   const tbody = table.querySelector('tbody');
-  tbody.innerHTML = '';
+  tbody.replaceChildren();
 
-  // loops through heroes and builds rows
+  if (!heroes.length) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = TABLE_COLUMNS.length;
+    cell.textContent = 'No heroes to display.';
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    return;
+  }
+
+  const rows = document.createDocumentFragment();
+
   heroes.forEach((hero) => {
     const row = document.createElement('tr');
+    row.dataset.heroId = hero.id;
+    row.tabIndex = 0;
 
-    // clicking a row selects the hero
-    row.addEventListener('click', () => {
-      updateState({ selectedHeroId: hero.id });
+    const selectHero = () => updateState({ selectedHeroId: hero.id });
+    row.addEventListener('click', selectHero);
+    row.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        selectHero();
+      }
     });
 
-    // icon cell
     const iconCell = document.createElement('td');
-    const img = document.createElement('img');
-    img.src = hero.display.icon || '';
-    img.alt = hero.display.name;
-    img.width = 40;
-    img.height = 40;
-    iconCell.appendChild(img);
+    if (hero.display.icon) {
+      const img = document.createElement('img');
+      img.src = hero.display.icon;
+      img.alt = hero.display.name;
+      img.width = 40;
+      img.height = 40;
+      img.loading = 'lazy';
+      iconCell.appendChild(img);
+    } else {
+      iconCell.textContent = 'Unknown';
+    }
     row.appendChild(iconCell);
 
-    // helper to add a cell
     const addCell = (value) => {
       const td = document.createElement('td');
-      td.textContent = value ?? '';
+      td.textContent = displayValue(value);
       row.appendChild(td);
     };
 
-    // display fields
     addCell(hero.display.name);
     addCell(hero.display.fullName);
-
-    // stats fields
     addCell(hero.stats.intelligence);
     addCell(hero.stats.strength);
     addCell(hero.stats.speed);
     addCell(hero.stats.durability);
     addCell(hero.stats.power);
     addCell(hero.stats.combat);
-
-    // appearance fields
     addCell(hero.display.race);
     addCell(hero.display.gender);
     addCell(hero.display.height);
     addCell(hero.display.weight);
-
-    // biography fields
     addCell(hero.display.placeOfBirth);
     addCell(hero.display.alignment);
 
-    tbody.appendChild(row);
+    rows.appendChild(row);
   });
-};
 
-// subscribe to state changes and re-render table
-export const initTable = () => {
-  const container = document.getElementById('table-container');
-  const table = createTable(container);
-
-  // re-render body whenever state changes
-  subscribeState(() => renderTableBody(table));
-
-  // initial render
-  renderTableBody(table);
+  tbody.appendChild(rows);
 };

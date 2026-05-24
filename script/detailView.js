@@ -1,30 +1,49 @@
-// renderHeroDetail renders the hero detail panel
+import { updateState } from './state.js';
+
+const addField = (list, label, value) => {
+  const term = document.createElement('dt');
+  term.textContent = label;
+
+  const description = document.createElement('dd');
+  description.textContent = value ?? 'Unknown';
+
+  list.appendChild(term);
+  list.appendChild(description);
+};
+
 export const renderHeroDetail = (container, hero) => {
-  // clears container
-  container.innerHTML = '';
+  container.replaceChildren();
   if (!hero) return;
 
-  // creates the detail panel
   const panel = document.createElement('section');
   panel.className = 'hero-detail';
 
-  // title
+  const closeButton = document.createElement('button');
+  closeButton.type = 'button';
+  closeButton.className = 'detail-close';
+  closeButton.textContent = 'Close';
+  closeButton.addEventListener('click', () => {
+    updateState({ selectedHeroId: null });
+  });
+  panel.appendChild(closeButton);
+
   const title = document.createElement('h2');
   title.textContent = hero.display.name;
   panel.appendChild(title);
 
-  // image
-  const image = document.createElement('img');
-  image.src =
+  const imageUrl =
     hero.images?.lg ||
     hero.images?.md ||
     hero.images?.sm ||
-    hero.display.icon ||
-    '';
-  image.alt = hero.display.name;
-  panel.appendChild(image);
+    hero.display.icon;
 
-  // fields for display
+  if (imageUrl) {
+    const image = document.createElement('img');
+    image.src = imageUrl;
+    image.alt = hero.display.name;
+    panel.appendChild(image);
+  }
+
   const fields = [
     ['Full Name', hero.display.fullName],
     ['Alignment', hero.display.alignment],
@@ -35,33 +54,34 @@ export const renderHeroDetail = (container, hero) => {
     ['Weight', hero.display.weight],
   ];
 
-  // description list
   const list = document.createElement('dl');
-  fields.forEach(([label, value]) => {
-    const term = document.createElement('dt');
-    term.textContent = label;
-
-    const description = document.createElement('dd');
-    description.textContent = value ?? 'Unknown';
-
-    list.appendChild(term);
-    list.appendChild(description);
-  });
+  fields.forEach(([label, value]) => addField(list, label, value));
   panel.appendChild(list);
 
-  // powerstats
   const stats = document.createElement('div');
   stats.className = 'powerstats';
 
   Object.entries(hero.stats).forEach(([key, value]) => {
     const stat = document.createElement('div');
     stat.className = 'powerstat';
-    stat.innerHTML = `<strong>${key}</strong>: ${value ?? 'N/A'}`;
+
+    const label = document.createElement('strong');
+    label.textContent = key;
+    stat.appendChild(label);
+    stat.append(`: ${value ?? 'N/A'}`);
+
     stats.appendChild(stat);
   });
 
   panel.appendChild(stats);
 
-  // inserts panel
+  const jsonTitle = document.createElement('h3');
+  jsonTitle.textContent = 'Full JSON';
+  panel.appendChild(jsonTitle);
+
+  const json = document.createElement('pre');
+  json.textContent = JSON.stringify(hero.original ?? hero, null, 2);
+  panel.appendChild(json);
+
   container.appendChild(panel);
 };
