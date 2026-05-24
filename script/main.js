@@ -1,14 +1,19 @@
-// import the fetch function
 import { fetchHeroes } from './data.js';
+import { loadStateFromUrl, initUrlSync } from './router.js';
+import { renderApp } from './render.js';
 
-// simple startup function
 const init = async () => {
-  // load and normalize heroes
+  // read URL parameters → update state
+  loadStateFromUrl();
+
+  // start syncing state → URL
+  initUrlSync();
+
+  // fetch and normalize heroes
   await fetchHeroes();
 
-  // temporary confirmation
-  console.log('Heroes loaded and normalized');
+  // render the full UI
+  renderApp();
 };
 
-// run the app
 init();
