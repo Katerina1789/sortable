@@ -1,4 +1,4 @@
-// utils.js - normalization helpers for clean, searchable hero data
+// normalization.js - normalization helpers for clean, searchable hero data
 
 // values treated as missing
 const MISSING_VALUES = new Set(['', '-', 'unknown', 'n/a', 'null', 'undefined']);
