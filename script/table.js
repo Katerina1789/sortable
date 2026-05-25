@@ -1,5 +1,8 @@
+// table.js - build table structure and render hero rows
+
 import { getState, updateState } from './state.js';
 
+// column definitions for table header
 export const TABLE_COLUMNS = [
   { key: 'icon', label: 'Icon' },
   { key: 'name', label: 'Name' },
@@ -18,11 +21,17 @@ export const TABLE_COLUMNS = [
   { key: 'alignment', label: 'Alignment' },
 ];
 
+// fallback display helper
 const displayValue = (value) => value ?? 'Unknown';
 
+// create table skeleton (header + empty body)
 export const createTable = (container) => {
+  const status = document.createElement('div');
+  status.className = 'table-status';
+
   const table = document.createElement('table');
 
+  // header row
   const thead = document.createElement('thead');
   const headerRow = document.createElement('tr');
 
@@ -31,23 +40,32 @@ export const createTable = (container) => {
     th.textContent = column.label;
     th.scope = 'col';
     th.dataset.column = column.key;
+    /* Krystallenia: attach sort click handlers and active header styling here. */
     headerRow.appendChild(th);
   });
 
   thead.appendChild(headerRow);
   table.appendChild(thead);
+
+  // empty body placeholder
   table.appendChild(document.createElement('tbody'));
 
   container.innerHTML = '';
-  container.appendChild(table);
+  container.append(status, table);
 
-  return table;
+  return { table, status };
 };
 
-export const renderTableBody = (table, heroes = getState().heroes) => {
+// render table rows
+export const renderTableBody = (
+  table,
+  heroes = getState().heroes,
+  selectedHeroId = null
+) => {
   const tbody = table.querySelector('tbody');
   tbody.replaceChildren();
 
+  // empty state
   if (!heroes.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
@@ -65,6 +83,11 @@ export const renderTableBody = (table, heroes = getState().heroes) => {
     row.dataset.heroId = hero.id;
     row.tabIndex = 0;
 
+    // highlight selected row
+    row.classList.toggle('selected', hero.id === selectedHeroId);
+    row.setAttribute('aria-selected', hero.id === selectedHeroId ? 'true' : 'false');
+
+    // row selection handler
     const selectHero = () => updateState({ selectedHeroId: hero.id });
     row.addEventListener('click', selectHero);
     row.addEventListener('keydown', (event) => {
@@ -74,6 +97,7 @@ export const renderTableBody = (table, heroes = getState().heroes) => {
       }
     });
 
+    // icon cell
     const iconCell = document.createElement('td');
     if (hero.display.icon) {
       const img = document.createElement('img');
@@ -88,12 +112,14 @@ export const renderTableBody = (table, heroes = getState().heroes) => {
     }
     row.appendChild(iconCell);
 
+    // helper to add a text cell
     const addCell = (value) => {
       const td = document.createElement('td');
       td.textContent = displayValue(value);
       row.appendChild(td);
     };
 
+    // text cells
     addCell(hero.display.name);
     addCell(hero.display.fullName);
     addCell(hero.stats.intelligence);

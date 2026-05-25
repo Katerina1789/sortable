@@ -1,5 +1,8 @@
+// detailView.js - render full hero detail panel
+
 import { updateState } from './state.js';
 
+// helper: add a labeled field to the <dl>
 const addField = (list, label, value) => {
   const term = document.createElement('dt');
   term.textContent = label;
@@ -11,13 +14,16 @@ const addField = (list, label, value) => {
   list.appendChild(description);
 };
 
+// render hero detail panel
 export const renderHeroDetail = (container, hero) => {
   container.replaceChildren();
   if (!hero) return;
 
+  // panel wrapper
   const panel = document.createElement('section');
   panel.className = 'hero-detail';
 
+  // close button
   const closeButton = document.createElement('button');
   closeButton.type = 'button';
   closeButton.className = 'detail-close';
@@ -27,10 +33,12 @@ export const renderHeroDetail = (container, hero) => {
   });
   panel.appendChild(closeButton);
 
+  // title
   const title = document.createElement('h2');
   title.textContent = hero.display.name;
   panel.appendChild(title);
 
+  // hero image
   const imageUrl =
     hero.images?.lg ||
     hero.images?.md ||
@@ -44,6 +52,7 @@ export const renderHeroDetail = (container, hero) => {
     panel.appendChild(image);
   }
 
+  // basic fields
   const fields = [
     ['Full Name', hero.display.fullName],
     ['Alignment', hero.display.alignment],
@@ -58,6 +67,7 @@ export const renderHeroDetail = (container, hero) => {
   fields.forEach(([label, value]) => addField(list, label, value));
   panel.appendChild(list);
 
+  // powerstats
   const stats = document.createElement('div');
   stats.className = 'powerstats';
 
@@ -75,6 +85,7 @@ export const renderHeroDetail = (container, hero) => {
 
   panel.appendChild(stats);
 
+  // raw JSON
   const jsonTitle = document.createElement('h3');
   jsonTitle.textContent = 'Full JSON';
   panel.appendChild(jsonTitle);
@@ -83,5 +94,6 @@ export const renderHeroDetail = (container, hero) => {
   json.textContent = JSON.stringify(hero.original ?? hero, null, 2);
   panel.appendChild(json);
 
+  // mount panel
   container.appendChild(panel);
 };

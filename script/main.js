@@ -1,29 +1,33 @@
+// main.js - app bootstrap (URL sync + render + data load)
+
 import { fetchHeroes } from './data.js';
-import { loadStateFromUrl, initUrlSync } from './router.js';
+import { loadStateFromUrl, initUrlSync } from './urlSync.js';
 import { renderApp } from './render.js';
+import { updateState } from './state.js';
 
-const showError = (error) => {
-  const container = document.getElementById('table-container');
-  container.textContent = error.message || 'Something went wrong loading heroes.';
-};
-
+// initialize app
 const init = async () => {
   try {
-    // 1. Load URL → state
+    // load URL -> state
     loadStateFromUrl();
 
-    // 2. Start syncing state → URL
+    // start syncing state -> URL
     initUrlSync();
 
-    // 3. Fetch heroes
-    await fetchHeroes();
-
-    // 4. Render the app (creates table once, subscribes to state)
+    // mount UI + show loading
     renderApp();
+    updateState({ loading: true, error: null });
 
+    // fetch heroes
+    await fetchHeroes();
+    updateState({ loading: false, error: null });
   } catch (error) {
-    showError(error);
+    updateState({ loading: false, error });
   }
 };
+
+/*
+  Vasiliki: mount search and pagination controls into #controls.
+*/
 
 init();
