@@ -10,8 +10,18 @@
   <body>
     <main id="app">
       <!-- Controls from the UI teammates can be mounted here. -->
-      <section id="controls"></section>
-
+      <section id="controls">
+      <input type="text" id="search">
+      <select id="page-size">
+      <option value="10">10</option>
+      <option value="20" selected>20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+      <option value="all">all</option>
+      </select>
+      <button id="prev">Previous</button>
+      <button id="next">Next</button>
+      </section>
       <!-- Table container -->
       <section id="table-container"></section>
 
