@@ -1,7 +1,14 @@
 // normalization.js - normalization helpers for clean, searchable hero data
 
 // values treated as missing
-const MISSING_VALUES = new Set(['', '-', 'unknown', 'n/a', 'null', 'undefined']);
+const MISSING_VALUES = new Set([
+  "",
+  "-",
+  "unknown",
+  "n/a",
+  "null",
+  "undefined",
+]);
 
 // clean text values
 export const cleanValue = (value) => {
@@ -34,14 +41,14 @@ const normalizeStat = (value) => {
 // safe lowercase string for searching/sorting
 const normalizeText = (value) => {
   const cleaned = cleanValue(value);
-  return cleaned ? cleaned.trim().toLowerCase() : '';
+  return cleaned ? cleaned.trim().toLowerCase() : "";
 };
 
 // normalize a single hero
 export const normalizeHero = (hero = {}) => {
   const heightValue = pickUnitValue(hero.appearance?.height, /cm/i);
   const weightValue = pickUnitValue(hero.appearance?.weight, /kg/i);
-  const displayName = cleanValue(hero.name) || 'Unknown hero';
+  const displayName = cleanValue(hero.name) || "Unknown hero";
 
   return {
     ...hero,

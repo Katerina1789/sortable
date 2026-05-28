@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -10,23 +10,29 @@
   <body>
     <main id="app">
       <section id="controls">
-      <input type="text" id="search">
-      <select id="page-size">
-      <option value="10">10</option>
-      <option value="20" selected>20</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
-      <option value="all">all</option>
-      </select>
-      <select id="field">
-        <option value="name">Name</option>
-        <option value="race">Race</option>
-        <option value="gender">Gender</option>
-        <option value="alignment">Alignment</option>
-      </select>
-      <button id="prev">Previous</button>
-      <button id="next">Next</button>
+        <input type="text" id="search" />
+        <select id="page-size">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="all">all</option>
+        </select>
+        <select id="field">
+          <option value="name">Name</option>
+          <option value="race">Race</option>
+          <option value="gender">Gender</option>
+          <option value="alignment">Alignment</option>
+        </select>
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
       </section>
+      <select id="operator">
+        <option value="include">Include</option>
+        <option value="exclude">Exclude</option>
+        <option value="equal">Equal</option>
+        <option value="fuzzy">Fuzzy</option>
+      </select>
       <!-- Table container -->
       <section id="table-container"></section>
 

@@ -58,13 +58,13 @@ The goal of this guide is to keep the workflow clean, simple and easy to audit.
 
 - This project is a browser‑based UI, so no automated unit tests are required.
 - Manual testing must follow the audit requirements:
-    - sorting
-    - searching
-    - pagination
-    - missing values
-    - performance
-    - no frameworks
-    - correct table structure
+  - sorting
+  - searching
+  - pagination
+  - missing values
+  - performance
+  - no frameworks
+  - correct table structure
 
 ---
 
@@ -94,4 +94,4 @@ Use direct messages on Discord/schedule calls or campus meetings for any questio
 
 ---
 
-***Let's learn new things and improve as a team!***
+**_Let's learn new things and improve as a team!_**

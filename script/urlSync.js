@@ -1,19 +1,19 @@
 // router.js - sync selected hero with URL (load + save)
 
-import { getState, updateState, subscribeState } from './state.js';
+import { getState, updateState, subscribeState } from "./state.js";
 
 // read state from URL
 export const loadStateFromUrl = () => {
   const params = new URLSearchParams(window.location.search);
 
   updateState({
-    selectedHeroId: Number(params.get('hero')) || null,
-    query: params.get('query') || '',
-    field: params.get('field') || 'name',
-    currentPage: Number(params.get('currentPage')) || 1,
-    pageSize: Number(params.get('pageSize')) || 20,
-    sortColumn: params.get('sortColumn') || 'name',
-    sortDirection: params.get('sortDirection') || 'asc',
+    selectedHeroId: Number(params.get("hero")) || null,
+    query: params.get("query") || "",
+    field: params.get("field") || "name",
+    currentPage: Number(params.get("currentPage")) || 1,
+    pageSize: Number(params.get("pageSize")) || 20,
+    sortColumn: params.get("sortColumn") || "name",
+    sortDirection: params.get("sortDirection") || "asc",
   });
 };
 
@@ -22,13 +22,13 @@ const serializeState = () => {
   const s = getState();
   const params = new URLSearchParams();
 
-  if (s.selectedHeroId) params.set('hero', s.selectedHeroId)
-  if (s.query) params.set('query', s.query)
-  if (s.field) params.set('field', s.field)
-  if (s.currentPage) params.set('currentPage', s.currentPage)
-  if (s.pageSize) params.set('pageSize', s.pageSize)
-  if (s.sortColumn) params.set('sortColumn', s.sortColumn)
-  if (s.sortDirection) params.set('sortDirection', s.sortDirection)
+  if (s.selectedHeroId) params.set("hero", s.selectedHeroId);
+  if (s.query) params.set("query", s.query);
+  if (s.field) params.set("field", s.field);
+  if (s.currentPage) params.set("currentPage", s.currentPage);
+  if (s.pageSize) params.set("pageSize", s.pageSize);
+  if (s.sortColumn) params.set("sortColumn", s.sortColumn);
+  if (s.sortDirection) params.set("sortDirection", s.sortDirection);
   return params.toString();
 };
 
@@ -48,18 +48,17 @@ export const initUrlSync = () => {
         : window.location.pathname;
 
       const shouldPush =
-        state.selectedHeroId &&
-        state.selectedHeroId !== lastSelectedHeroId;
+        state.selectedHeroId && state.selectedHeroId !== lastSelectedHeroId;
 
-      const method = shouldPush ? 'pushState' : 'replaceState';
+      const method = shouldPush ? "pushState" : "replaceState";
 
-      window.history[method]({}, '', newUrl);
+      window.history[method]({}, "", newUrl);
       lastSelectedHeroId = state.selectedHeroId;
     }, 120);
   });
 
   // read URL -> state
-  window.addEventListener('popstate', () => {
+  window.addEventListener("popstate", () => {
     loadStateFromUrl();
   });
 };

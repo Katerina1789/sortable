@@ -1,44 +1,44 @@
 // table.js - build table structure and render hero rows
 
-import { getState, updateState } from './state.js';
+import { getState, updateState } from "./state.js";
 
 // column definitions for table header
 export const TABLE_COLUMNS = [
-  { key: 'icon', label: 'Icon' },
-  { key: 'name', label: 'Name' },
-  { key: 'fullName', label: 'Full Name' },
-  { key: 'intelligence', label: 'Intelligence' },
-  { key: 'strength', label: 'Strength' },
-  { key: 'speed', label: 'Speed' },
-  { key: 'durability', label: 'Durability' },
-  { key: 'power', label: 'Power' },
-  { key: 'combat', label: 'Combat' },
-  { key: 'race', label: 'Race' },
-  { key: 'gender', label: 'Gender' },
-  { key: 'height', label: 'Height' },
-  { key: 'weight', label: 'Weight' },
-  { key: 'placeOfBirth', label: 'Place Of Birth' },
-  { key: 'alignment', label: 'Alignment' },
+  { key: "icon", label: "Icon" },
+  { key: "name", label: "Name" },
+  { key: "fullName", label: "Full Name" },
+  { key: "intelligence", label: "Intelligence" },
+  { key: "strength", label: "Strength" },
+  { key: "speed", label: "Speed" },
+  { key: "durability", label: "Durability" },
+  { key: "power", label: "Power" },
+  { key: "combat", label: "Combat" },
+  { key: "race", label: "Race" },
+  { key: "gender", label: "Gender" },
+  { key: "height", label: "Height" },
+  { key: "weight", label: "Weight" },
+  { key: "placeOfBirth", label: "Place Of Birth" },
+  { key: "alignment", label: "Alignment" },
 ];
 
 // fallback display helper
-const displayValue = (value) => value ?? 'Unknown';
+const displayValue = (value) => value ?? "Unknown";
 
 // create table skeleton (header + empty body)
 export const createTable = (container) => {
-  const status = document.createElement('div');
-  status.className = 'table-status';
+  const status = document.createElement("div");
+  status.className = "table-status";
 
-  const table = document.createElement('table');
+  const table = document.createElement("table");
 
   // header row
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
 
   TABLE_COLUMNS.forEach((column) => {
-    const th = document.createElement('th');
+    const th = document.createElement("th");
     th.textContent = column.label;
-    th.scope = 'col';
+    th.scope = "col";
     th.dataset.column = column.key;
     /* Krystallenia: attach sort click handlers and active header styling here. */
     headerRow.appendChild(th);
@@ -48,9 +48,9 @@ export const createTable = (container) => {
   table.appendChild(thead);
 
   // empty body placeholder
-  table.appendChild(document.createElement('tbody'));
+  table.appendChild(document.createElement("tbody"));
 
-  container.innerHTML = '';
+  container.innerHTML = "";
   container.append(status, table);
 
   return { table, status };
@@ -60,17 +60,17 @@ export const createTable = (container) => {
 export const renderTableBody = (
   table,
   heroes = getState().heroes,
-  selectedHeroId = null
+  selectedHeroId = null,
 ) => {
-  const tbody = table.querySelector('tbody');
+  const tbody = table.querySelector("tbody");
   tbody.replaceChildren();
 
   // empty state
   if (!heroes.length) {
-    const row = document.createElement('tr');
-    const cell = document.createElement('td');
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
     cell.colSpan = TABLE_COLUMNS.length;
-    cell.textContent = 'No heroes to display.';
+    cell.textContent = "No heroes to display.";
     row.appendChild(cell);
     tbody.appendChild(row);
     return;
@@ -79,42 +79,45 @@ export const renderTableBody = (
   const rows = document.createDocumentFragment();
 
   heroes.forEach((hero) => {
-    const row = document.createElement('tr');
+    const row = document.createElement("tr");
     row.dataset.heroId = hero.id;
     row.tabIndex = 0;
 
     // highlight selected row
-    row.classList.toggle('selected', hero.id === selectedHeroId);
-    row.setAttribute('aria-selected', hero.id === selectedHeroId ? 'true' : 'false');
+    row.classList.toggle("selected", hero.id === selectedHeroId);
+    row.setAttribute(
+      "aria-selected",
+      hero.id === selectedHeroId ? "true" : "false",
+    );
 
     // row selection handler
     const selectHero = () => updateState({ selectedHeroId: hero.id });
-    row.addEventListener('click', selectHero);
-    row.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
+    row.addEventListener("click", selectHero);
+    row.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         selectHero();
       }
     });
 
     // icon cell
-    const iconCell = document.createElement('td');
+    const iconCell = document.createElement("td");
     if (hero.display.icon) {
-      const img = document.createElement('img');
+      const img = document.createElement("img");
       img.src = hero.display.icon;
       img.alt = hero.display.name;
       img.width = 40;
       img.height = 40;
-      img.loading = 'lazy';
+      img.loading = "lazy";
       iconCell.appendChild(img);
     } else {
-      iconCell.textContent = 'Unknown';
+      iconCell.textContent = "Unknown";
     }
     row.appendChild(iconCell);
 
     // helper to add a text cell
     const addCell = (value) => {
-      const td = document.createElement('td');
+      const td = document.createElement("td");
       td.textContent = displayValue(value);
       row.appendChild(td);
     };

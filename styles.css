@@ -89,7 +89,7 @@ tr:hover {
   background: #fff;
   padding: 1.5rem;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 #detail-view:empty {
@@ -154,7 +154,7 @@ th:hover {
 }
 
 th::after {
-  content: '';
+  content: "";
   display: inline-block;
   width: 1em;
   text-align: center;
@@ -162,12 +162,12 @@ th::after {
 }
 
 th.sort-asc::after {
-  content: ' ↑';
+  content: " ↑";
   color: #2563eb;
 }
 
 th.sort-desc::after {
-  content: ' ↓';
+  content: " ↓";
   color: #2563eb;
 }
 

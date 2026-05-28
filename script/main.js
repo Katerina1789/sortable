@@ -1,9 +1,11 @@
 // main.js - app bootstrap (URL sync + render + data load)
 
-import { fetchHeroes } from './data.js';
-import { loadStateFromUrl, initUrlSync } from './urlSync.js';
-import { renderApp } from './render.js';
-import { updateState } from './state.js';
+import { fetchHeroes } from "./data.js";
+import { loadStateFromUrl, initUrlSync } from "./urlSync.js";
+import { renderApp } from "./render.js";
+import { updateState, getState } from "./state.js";
+import { initSearch } from "./search.js";
+import { initPagination } from "./pagination.js";
 
 // initialize app
 const init = async () => {
@@ -21,13 +23,12 @@ const init = async () => {
     // fetch heroes
     await fetchHeroes();
     updateState({ loading: false, error: null });
+    const { heroes } = getState();
+    initSearch(heroes);
+    initPagination();
   } catch (error) {
     updateState({ loading: false, error });
   }
 };
-
-/*
-  Vasiliki: mount search and pagination controls into #controls.
-*/
 
 init();

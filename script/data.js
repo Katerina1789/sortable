@@ -1,10 +1,11 @@
 // data.js - fetch and normalize hero data, store once, expose accessors
 
-import { normalizeHeroes } from './normalization.js';
-import { updateState } from './state.js';
+import { normalizeHeroes } from "./normalization.js";
+import { updateState } from "./state.js";
 
 // remote data source
-const DATA_URL = 'https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json';
+const DATA_URL =
+  "https://rawcdn.githack.com/akabab/superhero-api/0.2.0/api/all.json";
 
 // in‑memory cache
 let heroes = [];
@@ -20,7 +21,7 @@ export const fetchHeroes = async () => {
 
   const json = await response.json();
   if (!Array.isArray(json)) {
-    throw new Error('Hero data is not a list');
+    throw new Error("Hero data is not a list");
   }
 
   heroes = normalizeHeroes(json);

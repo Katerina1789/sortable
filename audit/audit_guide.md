@@ -5,17 +5,20 @@ Manual testing checklist for the Sortable project.
 ## Functional Tests
 
 ### Display & Data
+
 - [ ] Does the data appear in a `<table>` element?
 - [ ] Does the table present only the required data (icon, name, full name, powerstats, race, gender, height, weight, place of birth, alignment)?
 - [ ] Does the project use fetch()?
 - [ ] Is the project free of any frameworks or libraries (React, Vue, Svelte, etc.)?
 
 ### Pagination
+
 - [ ] Has client-side pagination been implemented with different pages showing different information?
 - [ ] Does the table initially display 20 results?
 - [ ] Can you change the page size to one of 10, 20, 50, 100, or all?
 
 ### Sorting
+
 - [ ] Are all columns of the table clickable in order to sort the results?
 - [ ] Are results initially sorted by the name column in ascending order?
 - [ ] Click once to sort by weight: is the table sorted numerically in ascending order? (check that 75 kg appears before 100 kg)
@@ -24,6 +27,7 @@ Manual testing checklist for the Sortable project.
 - [ ] Are missing values always shown last (regardless of sort direction)?
 
 ### Search
+
 - [ ] Write "Cat" in the search field: do results change on every keystroke (interactive)?
 - [ ] Does "Catwoman" appear in the filtered results?
 - [ ] Is search case-insensitive?
