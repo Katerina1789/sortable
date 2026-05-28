@@ -9,7 +9,9 @@ export const defaultState = {
   query:"",
   currentPage:1,
   pageSize:20,
-  field:"name"
+  field:"name",
+  sortColumn:"name",
+  sortDirection:"asc"
 };
 
 // current state

@@ -13,9 +13,9 @@ const updateSortIndicators = (headers, activeColumn, direction) => {
   })
 }
 
-const initSortControls = (headers, onSortChange) => {
-  let currentColumn = 'name'
-  let currentDirection = 'asc'
+const initSortControls = (headers, onSortChange, initialColumn = 'name', initialDirection = 'asc') => {
+  let currentColumn = initialColumn
+  let currentDirection = initialDirection
 
   headers.forEach((th) => {
     th.style.cursor = 'pointer'

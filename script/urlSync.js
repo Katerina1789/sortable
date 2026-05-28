@@ -8,10 +8,12 @@ export const loadStateFromUrl = () => {
 
   updateState({
     selectedHeroId: Number(params.get('hero')) || null,
-    query:params.get('query') || '',
-field:params.get('field') || 'name',
-currentPage:Number(params.get('currentPage')) || 1 ,
-pageSize:Number(params.get('pageSize')) || 20
+    query: params.get('query') || '',
+    field: params.get('field') || 'name',
+    currentPage: Number(params.get('currentPage')) || 1,
+    pageSize: Number(params.get('pageSize')) || 20,
+    sortColumn: params.get('sortColumn') || 'name',
+    sortDirection: params.get('sortDirection') || 'asc',
   });
 };
 
@@ -20,11 +22,13 @@ const serializeState = () => {
   const s = getState();
   const params = new URLSearchParams();
 
-  if (s.selectedHeroId) params.set('hero', s.selectedHeroId);
-  if (s.query) params.set('query',s.query)
-  if (s.field) params.set('field',s.field)
-  if (s.currentPage) params.set('currentPage',s.currentPage)
-    if (s.pageSize) params.set('pageSize',s.pageSize)
+  if (s.selectedHeroId) params.set('hero', s.selectedHeroId)
+  if (s.query) params.set('query', s.query)
+  if (s.field) params.set('field', s.field)
+  if (s.currentPage) params.set('currentPage', s.currentPage)
+  if (s.pageSize) params.set('pageSize', s.pageSize)
+  if (s.sortColumn) params.set('sortColumn', s.sortColumn)
+  if (s.sortDirection) params.set('sortDirection', s.sortDirection)
   return params.toString();
 };
 
