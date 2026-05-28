@@ -142,6 +142,41 @@ tr:hover {
   white-space: pre-wrap;
 }
 
+/* sort controls */
+
+th {
+  cursor: pointer;
+  user-select: none;
+}
+
+th:hover {
+  background: #d9dde3;
+}
+
+th::after {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  color: #94a3b8;
+}
+
+th.sort-asc::after {
+  content: ' ↑';
+  color: #2563eb;
+}
+
+th.sort-desc::after {
+  content: ' ↓';
+  color: #2563eb;
+}
+
+th.sort-asc,
+th.sort-desc {
+  background: #d4ddf7;
+  color: #1d4ed8;
+}
+
 @media (max-width: 900px) {
   #app {
     grid-template-columns: 1fr;
