@@ -6,6 +6,10 @@ export const defaultState = {
   loading: false,
   error: null,
   selectedHeroId: null,
+  query:"",
+  currentPage:1,
+  pageSize:20,
+  field:"name"
 };
 
 // current state
