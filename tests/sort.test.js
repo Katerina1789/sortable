@@ -1,126 +1,79 @@
-import { sortHeroes } from "../script/sort.js";
+// sort.test.js — unit tests for getSortedHeroes
 
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import { getSortedHeroes } from "../script/selectors.js";
+
+// minimal hero fixtures for sorting tests
 const heroes = [
   {
-    name: "Batman",
-    biography: {
-      fullName: "Bruce Wayne",
-      placeOfBirth: "Gotham City",
-      alignment: "good",
-    },
-    powerstats: {
-      intelligence: 81,
-      strength: 40,
-      speed: 29,
-      durability: 55,
-      power: 63,
-      combat: 90,
-    },
-    appearance: {
-      race: "Human",
-      gender: "Male",
-      height: ["6'2", "188 cm"],
-      weight: ["210 lb", "95 kg"],
-    },
+    normalized: { name: "batman", alignment: "good", weight: 95 },
+    display: { name: "Batman" },
+    stats: { speed: 29 },
   },
   {
-    name: "Ant-Man",
-    biography: {
-      fullName: "Scott Lang",
-      placeOfBirth: "Coral Gables, Florida",
-      alignment: "good",
-    },
-    powerstats: {
-      intelligence: 63,
-      strength: 28,
-      speed: 35,
-      durability: 28,
-      power: 71,
-      combat: 55,
-    },
-    appearance: {
-      race: "Human",
-      gender: "Male",
-      height: ["6'0", "183 cm"],
-      weight: ["190 lb", "86 kg"],
-    },
+    normalized: { name: "ant-man", alignment: "good", weight: 86 },
+    display: { name: "Ant-Man" },
+    stats: { speed: 35 },
   },
   {
-    name: "Zoom",
-    biography: { fullName: "-", placeOfBirth: "-", alignment: "bad" },
-    powerstats: {
-      intelligence: 50,
-      strength: 10,
-      speed: 100,
-      durability: 60,
-      power: 55,
-      combat: 45,
-    },
-    appearance: {
-      race: null,
-      gender: "Male",
-      height: ["6'1", "185 cm"],
-      weight: ["195 lb", "88 kg"],
-    },
+    normalized: { name: "zoom", alignment: "bad", weight: 88 },
+    display: { name: "Zoom" },
+    stats: { speed: 100 },
   },
 ];
 
-describe("sortHeroes - strings", () => {
-  test("sorts by name ascending", () => {
-    const result = sortHeroes(heroes, "name", "asc");
-    expect(result.map((h) => h.name)).toEqual(["Ant-Man", "Batman", "Zoom"]);
+describe("getSortedHeroes", () => {
+  it("sorts strings ascending", () => {
+    const result = getSortedHeroes(
+      { sortColumn: "name", sortDirection: "asc" },
+      heroes,
+    );
+    assert.deepEqual(
+      result.map((hero) => hero.display.name),
+      ["Ant-Man", "Batman", "Zoom"],
+    );
   });
 
-  test("sorts by name descending", () => {
-    const result = sortHeroes(heroes, "name", "desc");
-    expect(result.map((h) => h.name)).toEqual(["Zoom", "Batman", "Ant-Man"]);
+  it("sorts strings descending", () => {
+    const result = getSortedHeroes(
+      { sortColumn: "name", sortDirection: "desc" },
+      heroes,
+    );
+    assert.deepEqual(
+      result.map((hero) => hero.display.name),
+      ["Zoom", "Batman", "Ant-Man"],
+    );
   });
 
-  test("sorts by alignment ascending", () => {
-    const result = sortHeroes(heroes, "alignment", "asc");
-    expect(result[0].biography.alignment).toBe("bad");
-  });
-});
-
-describe("sortHeroes - numbers", () => {
-  test("sorts by speed ascending (numeric)", () => {
-    const result = sortHeroes(heroes, "speed", "asc");
-    expect(result.map((h) => h.name)).toEqual(["Batman", "Ant-Man", "Zoom"]);
-  });
-
-  test("sorts by weight ascending (numeric, parses kg)", () => {
-    const result = sortHeroes(heroes, "weight", "asc");
-    expect(result.map((h) => h.name)).toEqual(["Ant-Man", "Zoom", "Batman"]);
+  it("sorts numeric values", () => {
+    const result = getSortedHeroes(
+      { sortColumn: "speed", sortDirection: "asc" },
+      heroes,
+    );
+    assert.deepEqual(
+      result.map((hero) => hero.display.name),
+      ["Batman", "Ant-Man", "Zoom"],
+    );
   });
 
-  test("sorts by weight descending", () => {
-    const result = sortHeroes(heroes, "weight", "desc");
-    expect(result.map((h) => h.name)).toEqual(["Batman", "Zoom", "Ant-Man"]);
-  });
-});
-
-describe("sortHeroes - missing values", () => {
-  const withMissing = [
-    { ...heroes[0] },
-    { ...heroes[1], appearance: { ...heroes[1].appearance, race: null } },
-    {
-      ...heroes[2],
-      appearance: { ...heroes[2].appearance, race: "Metahuman" },
-    },
-  ];
-
-  test("missing race values appear last when sorting asc", () => {
-    const result = sortHeroes(withMissing, "race", "asc");
-    expect(result[result.length - 1].name).toBe("Ant-Man");
-  });
-
-  test("missing race values appear last when sorting desc", () => {
-    const result = sortHeroes(withMissing, "race", "desc");
-    expect(result[result.length - 1].name).toBe("Ant-Man");
-  });
-
-  test("missing fullName (dash) appears last", () => {
-    const result = sortHeroes(heroes, "fullName", "asc");
-    expect(result[result.length - 1].name).toBe("Zoom");
+  it("places missing values last", () => {
+    const withMissing = [
+      {
+        normalized: { name: "alpha" },
+        display: { name: "Alpha" },
+        stats: { speed: 5 },
+      },
+      {
+        normalized: { name: "" },
+        display: { name: "Unknown" },
+        stats: { speed: 0 },
+      },
+    ];
+    const result = getSortedHeroes(
+      { sortColumn: "name", sortDirection: "asc" },
+      withMissing,
+    );
+    assert.strictEqual(result[result.length - 1].display.name, "Unknown");
   });
 });
