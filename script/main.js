@@ -24,7 +24,7 @@ const init = async () => {
     await fetchHeroes();
     updateState({ loading: false, error: null });
     const { heroes } = getState();
-    initSearch(heroes);
+    initSearch();
     initPagination();
   } catch (error) {
     updateState({ loading: false, error });

@@ -1,4 +1,4 @@
-// router.js - sync selected hero with URL (load + save)
+// urlSync.js - sync mandatory state with URL (load + save)
 
 import { getState, updateState, subscribeState } from "./state.js";
 
@@ -9,11 +9,10 @@ export const loadStateFromUrl = () => {
   updateState({
     selectedHeroId: Number(params.get("hero")) || null,
     query: params.get("query") || "",
-    field: params.get("field") || "name",
-    currentPage: Number(params.get("currentPage")) || 1,
-    pageSize: Number(params.get("pageSize")) || 20,
-    sortColumn: params.get("sortColumn") || "name",
-    sortDirection: params.get("sortDirection") || "asc",
+    currentPage: Number(params.get("page")) || 1,
+    pageSize: params.get("pageSize") || "20", // keep "all" as string
+    sortColumn: params.get("sort") || "name",
+    sortDirection: params.get("direction") || "asc",
   });
 };
 
@@ -24,11 +23,11 @@ const serializeState = () => {
 
   if (s.selectedHeroId) params.set("hero", s.selectedHeroId);
   if (s.query) params.set("query", s.query);
-  if (s.field) params.set("field", s.field);
-  if (s.currentPage) params.set("currentPage", s.currentPage);
-  if (s.pageSize) params.set("pageSize", s.pageSize);
-  if (s.sortColumn) params.set("sortColumn", s.sortColumn);
-  if (s.sortDirection) params.set("sortDirection", s.sortDirection);
+  if (s.currentPage !== 1) params.set("page", s.currentPage);
+  if (s.pageSize !== "20") params.set("pageSize", s.pageSize);
+  if (s.sortColumn !== "name") params.set("sort", s.sortColumn);
+  if (s.sortDirection !== "asc") params.set("direction", s.sortDirection);
+
   return params.toString();
 };
 
@@ -57,7 +56,7 @@ export const initUrlSync = () => {
     }, 120);
   });
 
-  // read URL -> state
+  // read URL → state
   window.addEventListener("popstate", () => {
     loadStateFromUrl();
   });

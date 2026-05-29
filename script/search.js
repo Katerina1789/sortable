@@ -20,15 +20,16 @@ export const filterHeroes = (heroes, query, field, operator) => {
     return value.includes(query); // default
   });
 };
-export const initSearch = (heroes) => {
+
+export const initSearch = () => {
   const searchInput = document.getElementById("search");
-  const selectField = document.getElementById("field");
+
   searchInput.addEventListener("input", (event) => {
     const query = event.target.value;
-    const field = selectField.value;
-    const operator = document.getElementById("operator").value;
-    const filteredHeroes = filterHeroes(heroes, query, field, operator);
-    updateState({ query });
-    renderApp();
+
+    updateState({
+      query,
+      currentPage: 1, 
+    });
   });
 };

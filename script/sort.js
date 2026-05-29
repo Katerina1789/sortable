@@ -1,3 +1,4 @@
+import { updateState } from "./state.js";
 import { parseWeight, parseHeight } from "./utils.js";
 
 const getValue = (hero, column) => {
@@ -49,6 +50,14 @@ const sortHeroes = (heroes, column, direction) => {
 
     if (typeof aVal === "string") return dir * aVal.localeCompare(bVal);
     return dir * (aVal - bVal);
+  });
+};
+
+export const applySort = (column, direction) => {
+  updateState({
+    sortColumn: column,
+    sortDirection: direction,
+    currentPage: 1, 
   });
 };
 

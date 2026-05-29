@@ -29,6 +29,3 @@ export const fetchHeroes = async () => {
 
   return heroes;
 };
-
-// return cached heroes
-export const getHeroes = () => heroes;

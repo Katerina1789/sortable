@@ -1,3 +1,5 @@
+import { applySort } from "./sort.js";
+
 const getNextDirection = (clickedColumn, currentColumn, currentDirection) => {
   if (clickedColumn !== currentColumn) return "asc";
   return currentDirection === "asc" ? "desc" : "asc";
@@ -15,7 +17,6 @@ const updateSortIndicators = (headers, activeColumn, direction) => {
 
 const initSortControls = (
   headers,
-  onSortChange,
   initialColumn = "name",
   initialDirection = "asc",
 ) => {
@@ -26,14 +27,17 @@ const initSortControls = (
     th.style.cursor = "pointer";
     th.addEventListener("click", () => {
       const clicked = th.dataset.column;
+
       currentDirection = getNextDirection(
         clicked,
         currentColumn,
         currentDirection,
       );
       currentColumn = clicked;
+
       updateSortIndicators(headers, currentColumn, currentDirection);
-      onSortChange(currentColumn, currentDirection);
+
+      applySort(currentColumn, currentDirection);
     });
   });
 };

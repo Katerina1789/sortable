@@ -1,6 +1,6 @@
 // table.js - build table structure and render hero rows
 
-import { getState, updateState } from "./state.js";
+import { updateState } from "./state.js";
 
 // column definitions for table header
 export const TABLE_COLUMNS = [
@@ -40,14 +40,12 @@ export const createTable = (container) => {
     th.textContent = column.label;
     th.scope = "col";
     th.dataset.column = column.key;
-    /* Krystallenia: attach sort click handlers and active header styling here. */
     headerRow.appendChild(th);
   });
 
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // empty body placeholder
   table.appendChild(document.createElement("tbody"));
 
   container.innerHTML = "";
@@ -56,12 +54,7 @@ export const createTable = (container) => {
   return { table, status };
 };
 
-// render table rows
-export const renderTableBody = (
-  table,
-  heroes = getState().heroes,
-  selectedHeroId = null,
-) => {
+export const renderTableBody = (table, heroes, selectedHeroId) => {
   const tbody = table.querySelector("tbody");
   tbody.replaceChildren();
 
@@ -85,10 +78,7 @@ export const renderTableBody = (
 
     // highlight selected row
     row.classList.toggle("selected", hero.id === selectedHeroId);
-    row.setAttribute(
-      "aria-selected",
-      hero.id === selectedHeroId ? "true" : "false",
-    );
+    row.setAttribute("aria-selected", hero.id === selectedHeroId ? "true" : "false");
 
     // row selection handler
     const selectHero = () => updateState({ selectedHeroId: hero.id });

@@ -14,6 +14,10 @@ const addField = (list, label, value) => {
   list.appendChild(description);
 };
 
+// ⭐ helper: capitalize first letter
+const capitalize = (text) =>
+  text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
+
 // render hero detail panel
 export const renderHeroDetail = (container, hero) => {
   container.replaceChildren();
@@ -73,9 +77,9 @@ export const renderHeroDetail = (container, hero) => {
     stat.className = "powerstat";
 
     const label = document.createElement("strong");
-    label.textContent = key;
+    label.textContent = capitalize(key); // ⭐ Capitalized
     stat.appendChild(label);
-    stat.append(`: ${value ?? "N/A"}`);
+    stat.append(`: ${value ?? "Unknown"}`);
 
     stats.appendChild(stat);
   });

@@ -17,19 +17,26 @@ export const cleanValue = (value) => {
   return MISSING_VALUES.has(text.toLowerCase()) ? null : text;
 };
 
-// extract numeric part (e.g. "175 cm" -> 175)
+// extract numeric part with unit conversions
 export const parseNumericValue = (value) => {
   const text = cleanValue(value);
   if (!text) return null;
+
+  // meters → cm
+  if (/meters?/i.test(text)) {
+    const num = parseFloat(text);
+    return Number.isFinite(num) ? Math.round(num * 100) : null;
+  }
+
+  // tons → kg
+  if (/tons?/i.test(text)) {
+    const num = parseFloat(text.replace(/,/g, ""));
+    return Number.isFinite(num) ? num * 1000 : null;
+  }
+
+  // cm or kg → normal numeric extraction
   const match = text.match(/-?\d+(\.\d+)?/);
   return match ? Number(match[0]) : null;
-};
-
-// pick preferred unit from array or single value
-const pickUnitValue = (values, unit) => {
-  const list = Array.isArray(values) ? values : [values];
-  const preferred = list.find((value) => unit.test(String(value)));
-  return cleanValue(preferred) || cleanValue(list[0]);
 };
 
 // normalize numeric stat
@@ -46,8 +53,18 @@ const normalizeText = (value) => {
 
 // normalize a single hero
 export const normalizeHero = (hero = {}) => {
-  const heightValue = pickUnitValue(hero.appearance?.height, /cm/i);
-  const weightValue = pickUnitValue(hero.appearance?.weight, /kg/i);
+  // Always use the metric (second) value for height/weight
+  const heightMetric = Array.isArray(hero.appearance?.height)
+    ? hero.appearance.height[1]
+    : null;
+
+  const weightMetric = Array.isArray(hero.appearance?.weight)
+    ? hero.appearance.weight[1]
+    : null;
+
+  const heightValue = cleanValue(heightMetric);
+  const weightValue = cleanValue(weightMetric);
+
   const displayName = cleanValue(hero.name) || "Unknown hero";
 
   return {
@@ -61,8 +78,8 @@ export const normalizeHero = (hero = {}) => {
       fullName: cleanValue(hero.biography?.fullName),
       race: cleanValue(hero.appearance?.race),
       gender: cleanValue(hero.appearance?.gender),
-      height: heightValue,
-      weight: weightValue,
+      height: heightValue, // metric only
+      weight: weightValue, // metric only
       placeOfBirth: cleanValue(hero.biography?.placeOfBirth),
       alignment: cleanValue(hero.biography?.alignment),
     },

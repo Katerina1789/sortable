@@ -3,6 +3,8 @@
 import { getState, subscribeState } from "./state.js";
 import { createTable, renderTableBody } from "./table.js";
 import { renderHeroDetail } from "./detailView.js";
+import { getVisibleHeroes } from "./selectors.js";
+import { initSortControls } from "./sortControls.js"; // ⭐ make sure this import exists
 
 // mount app UI
 export const renderApp = () => {
@@ -12,6 +14,9 @@ export const renderApp = () => {
   // create table once
   const { table, status } = createTable(tableContainer);
 
+  const headers = table.querySelectorAll("th");
+  initSortControls(headers);
+
   // render on state change
   const render = (state) => {
     status.textContent = state.loading
@@ -20,7 +25,8 @@ export const renderApp = () => {
         ? `Error: ${state.error.message || "Unable to load heroes."}`
         : "";
 
-    renderTableBody(table, state.heroes, state.selectedHeroId);
+    const visibleHeroes = getVisibleHeroes(state);
+    renderTableBody(table, visibleHeroes, state.selectedHeroId);
 
     const hero = state.heroes.find(
       (h) => h.id === Number(state.selectedHeroId),
