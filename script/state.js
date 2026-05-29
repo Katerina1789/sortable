@@ -8,8 +8,9 @@ export const defaultState = {
   selectedHeroId: null,
   query: "",
   currentPage: 1,
-  pageSize: 20,
+  pageSize: "20",
   field: "name",
+  operator: "include",
   sortColumn: "name",
   sortDirection: "asc",
 };

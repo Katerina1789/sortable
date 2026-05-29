@@ -1,13 +1,84 @@
 // selectors.js — mandatory-only derived data pipeline
 // heroes → filter → sort → paginate → render
 
-// 1) Filter by name (mandatory-only search)
+const normalizeQuery = (query) => query?.trim().toLowerCase() || "";
+
+const getFieldValue = (hero, field) => {
+  if (hero.normalized && field in hero.normalized) {
+    return hero.normalized[field];
+  }
+
+  if (hero.stats && field in hero.stats) {
+    return hero.stats[field];
+  }
+
+  if (hero.display && field in hero.display) {
+    return hero.display[field] ?? "";
+  }
+
+  return "";
+};
+
+const matchesSearch = (hero, query, field, operator) => {
+  const value = getFieldValue(hero, field);
+  const normalizedQuery = normalizeQuery(query);
+
+  if (!normalizedQuery) return true;
+
+  if (operator === "include") {
+    return String(value).toLowerCase().includes(normalizedQuery);
+  }
+
+  if (operator === "exclude") {
+    return !String(value).toLowerCase().includes(normalizedQuery);
+  }
+
+  if (operator === "equal") {
+    if (typeof value === "number") {
+      const number = Number(normalizedQuery);
+      return Number.isFinite(number) && value === number;
+    }
+    return String(value).toLowerCase() === normalizedQuery;
+  }
+
+  if (operator === "notEqual") {
+    if (typeof value === "number") {
+      const number = Number(normalizedQuery);
+      return Number.isFinite(number) && value !== number;
+    }
+    return String(value).toLowerCase() !== normalizedQuery;
+  }
+
+  if (operator === "greaterThan") {
+    const number = Number(normalizedQuery);
+    return typeof value === "number" && Number.isFinite(number) && value > number;
+  }
+
+  if (operator === "lessThan") {
+    const number = Number(normalizedQuery);
+    return typeof value === "number" && Number.isFinite(number) && value < number;
+  }
+
+  if (operator === "fuzzy") {
+    if (typeof value !== "string") return false;
+    return normalizedQuery
+      .split("")
+      .every((char) => value.includes(char));
+  }
+
+  return String(value).toLowerCase().includes(normalizedQuery);
+};
+
+// 1) Filter by field and operator
 export const getFilteredHeroes = (state) => {
-  const query = state.query?.trim().toLowerCase();
+  const query = state.query?.trim();
+  const field = state.field || "name";
+  const operator = state.operator || "include";
+
   if (!query) return state.heroes;
 
   return state.heroes.filter((hero) =>
-    hero.normalized.name.includes(query)
+    matchesSearch(hero, query, field, operator),
   );
 };
 

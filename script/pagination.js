@@ -1,4 +1,4 @@
-import { getState, updateState } from "./state.js";
+import { getState, subscribeState, updateState } from "./state.js";
 import { getTotalPages } from "./selectors.js";
 
 export const paginateHeroes = (heroes, currentPage, pageSize) => {
@@ -11,6 +11,9 @@ export const initPagination = () => {
   const pageSize = document.getElementById("page-size");
   const prev = document.getElementById("prev");
   const next = document.getElementById("next");
+  const state = getState();
+
+  pageSize.value = state.pageSize;
 
   const updateButtons = () => {
     const state = getState();
@@ -49,5 +52,6 @@ export const initPagination = () => {
     }
   });
 
+  subscribeState(updateButtons);
   updateButtons();
 };

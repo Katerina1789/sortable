@@ -11,6 +11,8 @@ export const loadStateFromUrl = () => {
     query: params.get("query") || "",
     currentPage: Number(params.get("page")) || 1,
     pageSize: params.get("pageSize") || "20", // keep "all" as string
+    field: params.get("field") || "name",
+    operator: params.get("operator") || "include",
     sortColumn: params.get("sort") || "name",
     sortDirection: params.get("direction") || "asc",
   });
@@ -25,6 +27,8 @@ const serializeState = () => {
   if (s.query) params.set("query", s.query);
   if (s.currentPage !== 1) params.set("page", s.currentPage);
   if (s.pageSize !== "20") params.set("pageSize", s.pageSize);
+  if (s.field !== "name") params.set("field", s.field);
+  if (s.operator !== "include") params.set("operator", s.operator);
   if (s.sortColumn !== "name") params.set("sort", s.sortColumn);
   if (s.sortDirection !== "asc") params.set("direction", s.sortDirection);
 

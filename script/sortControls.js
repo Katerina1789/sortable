@@ -40,6 +40,8 @@ const initSortControls = (
       applySort(currentColumn, currentDirection);
     });
   });
+
+  updateSortIndicators(headers, currentColumn, currentDirection);
 };
 
 export { getNextDirection, updateSortIndicators, initSortControls };

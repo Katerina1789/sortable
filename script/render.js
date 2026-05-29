@@ -15,7 +15,7 @@ export const renderApp = () => {
   const { table, status } = createTable(tableContainer);
 
   const headers = table.querySelectorAll("th");
-  initSortControls(headers);
+  initSortControls(headers, getState().sortColumn, getState().sortDirection);
 
   // render on state change
   const render = (state) => {
