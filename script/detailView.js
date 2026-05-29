@@ -1,8 +1,8 @@
-// detailView.js - render full hero detail panel
+// detailView.js — render full hero detail panel
 
 import { updateState } from "./state.js";
 
-// helper: add a labeled field to the <dl>
+// add a labeled <dt>/<dd> pair to a <dl>
 const addField = (list, label, value) => {
   const term = document.createElement("dt");
   term.textContent = label;
@@ -14,20 +14,20 @@ const addField = (list, label, value) => {
   list.appendChild(description);
 };
 
-// ⭐ helper: capitalize first letter
+// capitalize first letter (for powerstat labels)
 const capitalize = (text) =>
   text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
 
-// render hero detail panel
+// render hero detail panel into container
 export const renderHeroDetail = (container, hero) => {
   container.replaceChildren();
   if (!hero) return;
 
-  // panel wrapper
+  // wrapper
   const panel = document.createElement("section");
   panel.className = "hero-detail";
 
-  // close button
+  // close button → clear selected hero
   const closeButton = document.createElement("button");
   closeButton.type = "button";
   closeButton.className = "detail-close";
@@ -42,7 +42,7 @@ export const renderHeroDetail = (container, hero) => {
   title.textContent = hero.display.name;
   panel.appendChild(title);
 
-  // hero image
+  // hero image (fallback chain)
   const imageUrl =
     hero.images?.lg || hero.images?.md || hero.images?.sm || hero.display.icon;
 
@@ -53,7 +53,7 @@ export const renderHeroDetail = (container, hero) => {
     panel.appendChild(image);
   }
 
-  // basic fields
+  // basic fields list
   const fields = [
     ["Full Name", hero.display.fullName],
     ["Alignment", hero.display.alignment],
@@ -68,7 +68,7 @@ export const renderHeroDetail = (container, hero) => {
   fields.forEach(([label, value]) => addField(list, label, value));
   panel.appendChild(list);
 
-  // powerstats
+  // powerstats block
   const stats = document.createElement("div");
   stats.className = "powerstats";
 
@@ -77,16 +77,16 @@ export const renderHeroDetail = (container, hero) => {
     stat.className = "powerstat";
 
     const label = document.createElement("strong");
-    label.textContent = capitalize(key); // ⭐ Capitalized
+    label.textContent = capitalize(key);
     stat.appendChild(label);
-    stat.append(`: ${value ?? "Unknown"}`);
 
+    stat.append(`: ${value ?? "Unknown"}`);
     stats.appendChild(stat);
   });
 
   panel.appendChild(stats);
 
-  // raw JSON
+  // raw JSON dump
   const jsonTitle = document.createElement("h3");
   jsonTitle.textContent = "Full JSON";
   panel.appendChild(jsonTitle);

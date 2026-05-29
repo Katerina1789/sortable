@@ -8,9 +8,12 @@
   </head>
 
   <body>
+    <!-- main app container -->
     <main id="app">
+      <!-- search + filters + pagination controls -->
       <section id="controls">
         <input type="text" id="search" />
+
         <select id="page-size">
           <option value="10">10</option>
           <option value="20" selected>20</option>
@@ -18,6 +21,7 @@
           <option value="100">100</option>
           <option value="all">all</option>
         </select>
+
         <select id="field">
           <option value="name">Name</option>
           <option value="race">Race</option>
@@ -26,6 +30,7 @@
           <option value="height">Height</option>
           <option value="weight">Weight</option>
         </select>
+
         <select id="operator">
           <option value="include">Include</option>
           <option value="exclude">Exclude</option>
@@ -35,16 +40,19 @@
           <option value="lessThan">Less than</option>
           <option value="fuzzy">Fuzzy</option>
         </select>
+
         <button id="prev">Previous</button>
         <button id="next">Next</button>
       </section>
-      <!-- Table container -->
+
+      <!-- table mount point -->
       <section id="table-container"></section>
 
-      <!-- Detail view container -->
+      <!-- detail panel mount point -->
       <section id="detail-view"></section>
     </main>
 
+    <!-- main entry point -->
     <script type="module" src="./script/main.js"></script>
   </body>
 </html>

@@ -1,20 +1,19 @@
+// pagination.js — page size + prev/next controls (UI → state)
+
 import { getState, subscribeState, updateState } from "./state.js";
 import { getTotalPages } from "./selectors.js";
 
-export const paginateHeroes = (heroes, currentPage, pageSize) => {
-  const start = (currentPage - 1) * pageSize;
-  const end = start + pageSize;
-  return heroes.slice(start, end);
-};
-
+// initialize pagination controls
 export const initPagination = () => {
   const pageSize = document.getElementById("page-size");
   const prev = document.getElementById("prev");
   const next = document.getElementById("next");
-  const state = getState();
 
+  // load initial value from state (URL sync)
+  const state = getState();
   pageSize.value = state.pageSize;
 
+  // enable/disable prev/next based on current page
   const updateButtons = () => {
     const state = getState();
     const totalPages = getTotalPages(state);
@@ -23,17 +22,17 @@ export const initPagination = () => {
     next.disabled = state.currentPage >= totalPages;
   };
 
+  // page size change → reset to page 1
   pageSize.addEventListener("change", (event) => {
-    const value = event.target.value;
-
     updateState({
-      pageSize: value,
-      currentPage: 1, 
+      pageSize: event.target.value,
+      currentPage: 1,
     });
 
     updateButtons();
   });
 
+  // previous page
   prev.addEventListener("click", () => {
     const state = getState();
     if (state.currentPage > 1) {
@@ -42,6 +41,7 @@ export const initPagination = () => {
     }
   });
 
+  // next page
   next.addEventListener("click", () => {
     const state = getState();
     const totalPages = getTotalPages(state);
@@ -52,6 +52,9 @@ export const initPagination = () => {
     }
   });
 
+  // re-run button state on every state change
   subscribeState(updateButtons);
+
+  // initial button state
   updateButtons();
 };

@@ -1,6 +1,6 @@
-// state.js - global app state + subscription system
+// state.js — global app state + subscription system
 
-// initial state
+// initial state (URL sync may override on load)
 export const defaultState = {
   heroes: [],
   loading: false,
@@ -15,22 +15,22 @@ export const defaultState = {
   sortDirection: "asc",
 };
 
-// current state
+// current state (immutable updates only)
 let state = { ...defaultState };
 
-// subscribers
+// subscribers (renderers, URL sync, etc.)
 const listeners = new Set();
 
-// read state
+// read current state
 export const getState = () => state;
 
-// subscribe to state changes
+// subscribe to state changes → returns unsubscribe fn
 export const subscribeState = (listener) => {
   listeners.add(listener);
   return () => listeners.delete(listener);
 };
 
-// update state and notify listeners
+// merge partial update → notify all subscribers
 export const updateState = (partial) => {
   state = { ...state, ...partial };
   listeners.forEach((fn) => fn(state));

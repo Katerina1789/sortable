@@ -1,4 +1,4 @@
-// table.js - build table structure and render hero rows
+// table.js — build table structure + render hero rows
 
 import { updateState } from "./state.js";
 
@@ -39,21 +39,24 @@ export const createTable = (container) => {
     const th = document.createElement("th");
     th.textContent = column.label;
     th.scope = "col";
-    th.dataset.column = column.key;
+    th.dataset.column = column.key; // used by sort controls
     headerRow.appendChild(th);
   });
 
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
+  // empty tbody (filled on render)
   table.appendChild(document.createElement("tbody"));
 
+  // mount table + status
   container.innerHTML = "";
   container.append(status, table);
 
   return { table, status };
 };
 
+// render table rows
 export const renderTableBody = (table, heroes, selectedHeroId) => {
   const tbody = table.querySelector("tbody");
   tbody.replaceChildren();
@@ -78,7 +81,10 @@ export const renderTableBody = (table, heroes, selectedHeroId) => {
 
     // highlight selected row
     row.classList.toggle("selected", hero.id === selectedHeroId);
-    row.setAttribute("aria-selected", hero.id === selectedHeroId ? "true" : "false");
+    row.setAttribute(
+      "aria-selected",
+      hero.id === selectedHeroId ? "true" : "false",
+    );
 
     // row selection handler
     const selectHero = () => updateState({ selectedHeroId: hero.id });
